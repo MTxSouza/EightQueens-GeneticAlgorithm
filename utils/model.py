@@ -88,7 +88,14 @@ class EightQueensGA:
         return emptyBoards
     
     def __selection(self, batch: np.ndarray, losses: np.ndarray) -> np.ndarray:
-        ...
+        
+        # sorting losses
+        sortIdx = losses.argsort()
+        
+        # selecting besties
+        besties = batch[sortIdx][:self.__sel]
+        
+        return besties
     
     def __fitness(self, batch: np.ndarray) -> np.ndarray:
         
