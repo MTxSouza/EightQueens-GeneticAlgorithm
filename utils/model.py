@@ -63,7 +63,18 @@ class EightQueensGA:
         ...
     
     def __genInitPopulation(self) -> np.ndarray:
-        ...
+        
+        # creating empty matrices
+        emptyBoards = np.zeros(shape=[8,8], dtype=np.int8)
+        
+        # generating random indices
+        # to place all queens
+        rR, rC = np.random.randint(low=0, high=8, size=[2,8])
+        
+        # placing all queens on board
+        emptyBoards[rR,rC] = 1
+        
+        return emptyBoards
     
     def __fitness(self, batch: np.ndarray) -> np.ndarray:
         ...
