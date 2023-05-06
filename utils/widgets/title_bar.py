@@ -13,7 +13,7 @@ class TitleBar(QFrame):
         
         # widget settings
         self.setFixedHeight(30)
-        self.setStyleSheet('background: blue')
+        self.setStyleSheet('background: #d6d6d6')
     
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
