@@ -87,11 +87,49 @@ class EightQueensGA:
         
         return emptyBoards
     
-    def __selection(self, batch: np.ndarray, scores: np.ndarray) -> np.ndarray:
+    def __selection(self, batch: np.ndarray, losses: np.ndarray) -> np.ndarray:
         ...
     
     def __fitness(self, batch: np.ndarray) -> np.ndarray:
-        ...
+        
+        # picking queens position
+        idx = np.transpose(a=np.nonzero(a=batch))
+        
+        # computing loss of each
+        # game board
+        losses = {}
+        for (i,r,c) in idx:
+            
+            # looking for queens
+            # vertically and
+            # horizontally
+            row = batch[i,r,:].sum()
+            col = batch[i,:,c].sum()
+            
+            # checking for queens
+            if i not in losses:
+                losses[i] = 0
+            
+            if row > 1:
+                losses[i] += row - 1
+            if col > 1:
+                losses[i] += col - 1
+            
+            # looking for queens
+            # on the diagonal
+            diagRight = r - c
+            diagLeft = r + c
+            for R in range(8):
+                for C in range(8):
+                    if (R,C) != (r,c):
+                        if (R + C == diagLeft or R - C == diagRight) and batch[i,R,C] == 1:
+                            losses[i] += 1
+        
+        # converting dict into
+        # a numpy array
+        losses = np.array(object=[loss for loss in losses.values()], dtype=np.int8)
+        
+        return losses
     
     def __crossover(self, batch: np.ndarray) -> np.ndarray:
         ...
