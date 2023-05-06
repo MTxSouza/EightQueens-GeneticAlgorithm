@@ -9,12 +9,10 @@ class EightQueensGame(QMainWindow):
         
         # widget settings
         self.setMinimumSize(QSize(1280,720))
-        self.setStyleSheet('background: #d6d6d6')
+        self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
         
         # window layout
-        titleBar = QFrame()
-        titleBar.setFixedHeight(30)
-        titleBar.setStyleSheet('background: blue')
+        titleBar = TitleBar(parent=self)
         
         mainFrame = QFrame()
         mainFrame.setStyleSheet('background: red')
