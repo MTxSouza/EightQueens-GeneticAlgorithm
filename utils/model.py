@@ -65,14 +65,25 @@ class EightQueensGA:
     def __genInitPopulation(self) -> np.ndarray:
         
         # creating empty matrices
-        emptyBoards = np.zeros(shape=[8,8], dtype=np.int8)
-        
+        emptyBoards = np.zeros(
+            shape=[self.__initPop,8,8], 
+            dtype=np.int8
+        )
+
         # generating random indices
         # to place all queens
-        rR, rC = np.random.randint(low=0, high=8, size=[2,8])
-        
-        # placing all queens on board
-        emptyBoards[rR,rC] = 1
+        rIdx = np.random.randint(
+            low=0, 
+            high=8, 
+            size=[self.__initPop,8,2]
+        )
+        rIdx = np.concatenate(
+            [np.arange(self.__initPop).repeat(8).reshape(-1,1), rIdx.reshape(-1,2)], 
+            axis=1
+        )
+
+        # placing queens
+        emptyBoards[rIdx[:,0], rIdx[:,1], rIdx[:,2]] = 1
         
         return emptyBoards
     
