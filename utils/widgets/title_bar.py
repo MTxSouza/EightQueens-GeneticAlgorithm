@@ -4,8 +4,58 @@ from utils.widgets import *
 
 class Button(QToolButton):
     
-    def __init__(self, *args, **kargs) -> None:
+    def __init__(self, icon: str, *args, **kargs) -> None:
         super(Button, self).__init__(*args, **kargs)
+        
+        # main parameters
+        self.ic = icon
+        
+        # widget settings
+        self.setFixedWidth(40)
+    
+    def paintEvent(self, arg__1: QPaintEvent) -> None:
+        
+        # creating painter
+        with QPainter(self) as painter:
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            
+            if self.underMouse():
+                if self.ic == 'exit':
+                    painter.setBrush(QColor('#f13232'))
+                    iconColor = QColor('#ffffff')
+                else:
+                    painter.setBrush(QColor('#c2c2c2'))
+                    iconColor = QColor('#474747')
+            else:
+                painter.setBrush(QColor('#d6d6d6'))
+                iconColor = QColor('#474747')
+            
+            rect = self.rect()
+            painter.drawRect(rect)
+            
+            cx = int((self.rect().x() + self.rect().width()) / 2)
+            cy = int((self.rect().y() + self.rect().height()) / 2)
+            
+            pen = QPen()
+            pen.setWidthF(1.5)
+            pen.setColor(iconColor)
+            
+            painter.setPen(pen)
+            if self.ic == 'exit':
+                painter.drawLines([
+                    QLine(cx-4, cy-4, cx+4, cy+4),
+                    QLine(cx-4, cy+4, cx+4, cy-4),
+                ])
+            elif self.ic == 'min':
+                painter.drawLine(QLine(cx-5, cy, cx+5, cy))
+            elif self.ic == 'max':
+                painter.drawLines([
+                    QLine(cx-5, cy-2, cx+5, cy-2),
+                    QLine(cx+5, cy-2, cx+5, cy+2),
+                    QLine(cx+5, cy+2, cx-5, cy+2),
+                    QLine(cx-5, cy+2, cx-5, cy-2),
+                ])
 
 class TitleBar(QFrame):
     
@@ -21,13 +71,13 @@ class TitleBar(QFrame):
         self.setStyleSheet('background: #d6d6d6')
         
         # widget layout
-        exitButton = Button()
+        exitButton = Button(icon='exit')
         exitButton.clicked.connect(self.exitCall)
         
-        maxButton = Button()
+        maxButton = Button(icon='max')
         maxButton.clicked.connect(self.maxCall)
         
-        minButton = Button()
+        minButton = Button(icon='min')
         minButton.clicked.connect(self.minCall)
         
         mainLayout = QHBoxLayout()
