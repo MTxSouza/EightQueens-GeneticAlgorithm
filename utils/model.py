@@ -1,4 +1,6 @@
 # imports
+from typing import Tuple
+
 import numpy as np
 
 
@@ -59,7 +61,7 @@ class EightQueensGA:
         self.__initPop = init_population
         self.__sel = selection
         
-    def run(self) -> np.ndarray:
+    def run(self) -> Tuple[np.ndarray, int]:
         
         # geranting init population
         population = self.__genInitPopulation()
@@ -80,7 +82,7 @@ class EightQueensGA:
             # applying mutation
             population = self.__mutation(batch=population)
 
-        return population
+        return population, gen
     
     def __genInitPopulation(self) -> np.ndarray:
         
