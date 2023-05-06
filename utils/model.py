@@ -98,18 +98,12 @@ class EightQueensGA:
 
         # generating random indices
         # to place all queens
-        rIdx = np.random.randint(
-            low=0, 
-            high=8, 
-            size=[self.__initPop,8,2]
-        )
-        rIdx = np.concatenate(
-            [np.arange(self.__initPop).repeat(8).reshape(-1,1), rIdx.reshape(-1,2)], 
-            axis=1
-        )
-
-        # placing queens
-        emptyBoards[rIdx[:,0], rIdx[:,1], rIdx[:,2]] = 1
+        for nBatch in range(self.__initPop):
+            for queens in range(8):
+                rR, rC = np.random.randint(low=0, high=8, size=2)
+                while emptyBoards[nBatch, rR, rC] == 1:
+                    rR, rC = np.random.randint(low=0, high=8, size=2)
+                emptyBoards[nBatch, rR, rC] = 1
         
         return emptyBoards
     
