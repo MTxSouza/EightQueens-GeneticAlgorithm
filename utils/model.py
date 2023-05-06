@@ -60,7 +60,7 @@ class EightQueensGA:
         self.__initPop = init_population
         self.__sel = selection
         
-    def run(self, attempts: int = 100) -> Tuple[np.ndarray, int]:
+    def run(self, attempts: int = 100) -> Tuple[np.ndarray, int, bool]:
         
         # checking parameters
         assert isinstance(attempts, (int)), 'attempts must be an int'
@@ -69,13 +69,13 @@ class EightQueensGA:
         # geranting init population
         population = self.__genInitPopulation()
         
-        for gen in range(attempts):
+        for gen in range(1, attempts + 1):
             
             # applying fitness
             losses = self.__fitness(batch=population)
             if (losses == 0).any():
                 population = population[np.where(losses == 0)[0]]
-                break
+                return population, gen, True
             
             # selecting besties
             population = self.__selection(batch=population, losses=losses)
@@ -86,7 +86,7 @@ class EightQueensGA:
             # applying mutation
             population = self.__mutation(batch=population)
 
-        return population, gen + 1
+        return population, gen, False
     
     def __genInitPopulation(self) -> np.ndarray:
         
