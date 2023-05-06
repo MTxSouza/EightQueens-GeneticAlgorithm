@@ -29,3 +29,24 @@ class EightQueensGA:
             selection: Rank of the data with the best fitness
         '''
         
+        # checking parameters
+        assert isinstance(crossover_rate, (float)), 'crossover_rate must be a float'
+        assert crossover_rate > 0 and crossover_rate <= 1, 'crossover_rate must be between 0 and 1'
+        
+        assert isinstance(crossover_p, (float)), 'crossover_p must be a float'
+        assert crossover_p > 0 and crossover_p <= 1, 'crossover_p must be between 0 and 1'
+        
+        assert isinstance(mutation_rate, (float)), 'mutation_rate must be a float'
+        assert mutation_rate > 0 and mutation_rate <= 1, 'mutation_rate must be between 0 and 1'
+        
+        assert isinstance(mutation_p, (float)), 'mutation_p must be a float'
+        assert mutation_p > 0 and mutation_p <= 1, 'mutation_p must be between 0 and 1'
+        
+        assert isinstance(init_population, (int)), 'init_population must be an int'
+        assert init_population > 50, 'init_population must be bigger than 50'
+        
+        if selection is None:
+            selection = init_population // 2
+        else:
+            assert isinstance(selection, (int, None)), 'selection must be an int'
+            assert selection > 10 and selection < init_population, 'selection must be bigger than 10 and lower than init_population'
