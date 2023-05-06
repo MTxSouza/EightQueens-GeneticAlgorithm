@@ -17,7 +17,7 @@ class TitleBar(QFrame):
         self.pressed = False
         
         # widget settings
-        self.setFixedHeight(30)
+        self.setFixedHeight(20)
         self.setStyleSheet('background: #d6d6d6')
         
         # widget layout
@@ -31,6 +31,8 @@ class TitleBar(QFrame):
         minButton.clicked.connect(self.minCall)
         
         mainLayout = QHBoxLayout()
+        mainLayout.setContentsMargins(0,0,0,0)
+        mainLayout.setSpacing(0)
         mainLayout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignRight)
         mainLayout.addWidget(minButton)
         mainLayout.addWidget(maxButton)
