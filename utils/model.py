@@ -175,23 +175,19 @@ class EightQueensGA:
             if np.random.random(size=[1]) < 0.5:
                 
                 fatherId, motherId = np.random.choice(a=5, size=2, replace=False)
-                father = batch[fatherId, :, :].flatten()
-                father = father[:int(batch.shape[0] * self.__crossRate)]
+                father = batch[fatherId, :, :].flatten().copy()
+                father = father[:int(father.shape[0] * self.__crossRate)]
                 
-                for value in batch[motherId, :, :].flatten():
+                for value in batch[motherId, :, :].flatten().copy():
                     if father.shape[0] < 64:
                         father = np.append(arr=father, values=value)
                     else:
-                        while father.sum() < 8:
+                        while father.sum() != 8:
                             rIdx = np.random.randint(low=0, high=64, size=1)
-                            while father[rIdx] == 1:
+                            n = 0 if father.sum() > 8 else 1
+                            while father[rIdx] == n:
                                 rIdx = np.random.randint(low=0, high=64, size=1)
-                            father[rIdx] = 1
-                        while father.sum() > 8:
-                            rIdx = np.random.randint(low=0, high=64, size=1)
-                            while father[rIdx] == 0:
-                                rIdx = np.random.randint(low=0, high=64, size=1)
-                            father[rIdx] = 0
+                            father[rIdx] = n
                         break
                 child = father.reshape((1,8,8))
             
