@@ -51,3 +51,11 @@ class EightQueensGA:
             assert isinstance(selection, (int)), 'selection must be an int'
             assert selection > 10 and selection < init_population, 'selection must be bigger than 10 and lower than init_population'
 
+        # parameters
+        self.__crossRate = crossover_rate
+        self.__crossP = crossover_p
+        self.__mutRate = mutation_rate
+        self.__mutP = mutation_p
+        self.__initPop = init_population
+        self.__sel = selection
+        
