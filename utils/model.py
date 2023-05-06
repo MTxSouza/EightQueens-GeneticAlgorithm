@@ -48,5 +48,6 @@ class EightQueensGA:
         if selection is None:
             selection = init_population // 2
         else:
-            assert isinstance(selection, (int, None)), 'selection must be an int'
+            assert isinstance(selection, (int)), 'selection must be an int'
             assert selection > 10 and selection < init_population, 'selection must be bigger than 10 and lower than init_population'
+
