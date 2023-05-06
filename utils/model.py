@@ -139,7 +139,42 @@ class EightQueensGA:
         return losses
     
     def __crossover(self, batch: np.ndarray) -> np.ndarray:
-        ...
+        
+        # computing loss of each
+        # game board
+        for i in range(5):
+            
+            # applying crossover rate
+            # and crossover probility
+            if np.random.random(size=[1]) < 0.5:
+                
+                fatherId, motherId = np.random.choice(a=5, size=2, replace=False)
+                father = selected[fatherId, :, :].flatten()
+                father = father[:int(selected.shape[0] * self.__crossRate)]
+                
+                for value in selected[motherId, :, :].flatten():
+                    if father.shape[0] < 64:
+                        father = np.append(arr=father, values=value)
+                    else:
+                        while father.sum() < 8:
+                            rIdx = np.random.randint(low=0, high=64, size=1)
+                            while father[rIdx] == 1:
+                                rIdx = np.random.randint(low=0, high=64, size=1)
+                            father[rIdx] = 1
+                        while father.sum() > 8:
+                            rIdx = np.random.randint(low=0, high=64, size=1)
+                            while father[rIdx] == 0:
+                                rIdx = np.random.randint(low=0, high=64, size=1)
+                            father[rIdx] = 0
+                        break
+                child = father.reshape((1,8,8))
+            
+            else:
+                child = selected[i,:,:].copy().reshape((1,8,8))
+            
+            selected = np.append(arr=selected, values=child, axis=0)
+        
+        return selected
     
     def __mutation(self, batch: np.ndarray) -> np.ndarray:
         
@@ -150,7 +185,7 @@ class EightQueensGA:
             matrix = batch[i,:,:].flatten()
             
             # applying mutation rate
-            # and probility of mutation
+            # and mutation probility
             if np.random.random(size=[1]) < self.__mutP:
                 while np.random.random(size=[1]) < self.__mutRate:
                     
