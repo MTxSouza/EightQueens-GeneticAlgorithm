@@ -162,17 +162,17 @@ class EightQueensGA:
         
         # computing loss of each
         # game board
-        for i in range(5):
+        for i in range(batch.shape[0]):
             
             # applying crossover rate
             # and crossover probility
             if np.random.random(size=[1]) < 0.5:
                 
                 fatherId, motherId = np.random.choice(a=5, size=2, replace=False)
-                father = selected[fatherId, :, :].flatten()
-                father = father[:int(selected.shape[0] * self.__crossRate)]
+                father = batch[fatherId, :, :].flatten()
+                father = father[:int(batch.shape[0] * self.__crossRate)]
                 
-                for value in selected[motherId, :, :].flatten():
+                for value in batch[motherId, :, :].flatten():
                     if father.shape[0] < 64:
                         father = np.append(arr=father, values=value)
                     else:
@@ -190,11 +190,11 @@ class EightQueensGA:
                 child = father.reshape((1,8,8))
             
             else:
-                child = selected[i,:,:].copy().reshape((1,8,8))
+                child = batch[i,:,:].copy().reshape((1,8,8))
             
-            selected = np.append(arr=selected, values=child, axis=0)
+            batch = np.append(arr=batch, values=child, axis=0)
         
-        return selected
+        return batch
     
     def __mutation(self, batch: np.ndarray) -> np.ndarray:
         
