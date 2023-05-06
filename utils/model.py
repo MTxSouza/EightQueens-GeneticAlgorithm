@@ -61,12 +61,16 @@ class EightQueensGA:
         self.__initPop = init_population
         self.__sel = selection
         
-    def run(self) -> Tuple[np.ndarray, int]:
+    def run(self, attempts: int = 100) -> Tuple[np.ndarray, int]:
+        
+        # checking parameters
+        assert isinstance(attempts, (int)), 'attempts must be an int'
+        assert attempts > 0, 'attempts must be bigger than 0'
         
         # geranting init population
         population = self.__genInitPopulation()
         
-        for gen in range(1000):
+        for gen in range(attempts):
             
             # applying fitness
             losses = self.__fitness(batch=population)
