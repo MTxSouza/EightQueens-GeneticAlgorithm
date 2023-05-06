@@ -86,7 +86,7 @@ class EightQueensGA:
             # applying mutation
             population = self.__mutation(batch=population)
 
-        return population, gen
+        return population, gen + 1
     
     def __genInitPopulation(self) -> np.ndarray:
         
