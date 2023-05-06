@@ -142,4 +142,28 @@ class EightQueensGA:
         ...
     
     def __mutation(self, batch: np.ndarray) -> np.ndarray:
-        ...
+        
+        # loop through each
+        # matrix
+        for i in range(self.__sel):
+            
+            matrix = batch[i,:,:].flatten()
+            
+            # applying mutation rate
+            # and probility of mutation
+            if np.random.random(size=[1]) < self.__mutP:
+                while np.random.random(size=[1]) < self.__mutRate:
+                    
+                    # picking random indices
+                    curr, dst = np.random.randint(low=0, high=64, size=2)
+                    while matrix[curr] == matrix[dst]:
+                        curr, dst = np.random.randint(low=0, high=64, size=2)
+                    
+                    # inverting values
+                    vCurr, vDst = matrix[curr], matrix[dst]
+                    matrix[curr] = vDst
+                    matrix[dst] = vCurr
+                    
+            batch[i,:,:] = matrix.reshape((8,8))
+    
+        return batch
