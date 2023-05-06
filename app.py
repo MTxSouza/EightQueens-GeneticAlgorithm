@@ -1,4 +1,5 @@
 # imports
+from utils.widgets.title_bar import TitleBar
 from utils.widgets import *
 
 
