@@ -60,7 +60,27 @@ class EightQueensGA:
         self.__sel = selection
         
     def run(self) -> np.ndarray:
-        ...
+        
+        # geranting init population
+        population = self.__genInitPopulation()
+        
+        for gen in range(1000):
+            
+            # applying fitness
+            losses = self.__fitness(batch=population)
+            if losses[0] == 0:
+                break
+            
+            # selecting besties
+            population = self.__selection(batch=population, losses=losses)
+
+            # applying crossover
+            population = self.__crossover(batch=population)
+            
+            # applying mutation
+            population = self.__mutation(batch=population)
+
+        return population
     
     def __genInitPopulation(self) -> np.ndarray:
         
