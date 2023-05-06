@@ -200,7 +200,7 @@ class EightQueensGA:
         
         # loop through each
         # matrix
-        for i in range(self.__sel):
+        for i in range(batch.shape[0]):
             
             matrix = batch[i,:,:].flatten()
             
