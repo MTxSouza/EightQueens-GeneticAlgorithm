@@ -73,7 +73,8 @@ class EightQueensGA:
             
             # applying fitness
             losses = self.__fitness(batch=population)
-            if losses[0] == 0:
+            if (losses == 0).any():
+                population = population[np.where(losses == 0)[0]]
                 break
             
             # selecting besties
