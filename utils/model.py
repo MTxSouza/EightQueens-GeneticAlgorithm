@@ -87,6 +87,9 @@ class EightQueensGA:
         
         return emptyBoards
     
+    def __selection(self, batch: np.ndarray) -> np.ndarray:
+        ...
+    
     def __fitness(self, batch: np.ndarray) -> np.ndarray:
         ...
     
