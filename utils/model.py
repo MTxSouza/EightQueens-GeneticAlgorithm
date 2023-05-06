@@ -59,3 +59,17 @@ class EightQueensGA:
         self.__initPop = init_population
         self.__sel = selection
         
+    def run(self) -> np.ndarray:
+        ...
+    
+    def __genInitPopulation(self) -> np.ndarray:
+        ...
+    
+    def __fitness(self, batch: np.ndarray) -> np.ndarray:
+        ...
+    
+    def __crossover(self, batch: np.ndarray) -> np.ndarray:
+        ...
+    
+    def __mutation(self, batch: np.ndarray) -> np.ndarray:
+        ...
