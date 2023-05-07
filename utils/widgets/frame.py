@@ -53,10 +53,13 @@ class OptionField(QFrame):
         self.setStyleSheet('background: #c2c2c2')
         
         # widget layout
-        if parameter in ['Mutation Rate', 'Crossover Rate', 'Mutation Prob.', 'Crossover Prob.']:
+        if parameter in ['Mutation Rate', 'Crossover Rate', 'Mutation Prob.']:
             self.slider = Slider(min=0, max=100, isFloat=True)
         else:
-            self.slider = Slider(min=50, max=200, isFloat=False)
+            if parameter == 'Init Population':
+                self.slider = Slider(min=50, max=200, isFloat=False)
+            elif parameter == 'Select':
+                self.slider = Slider(min=10, max=20, isFloat=False)
         
         font = QFont()
         font.setBold(True)
@@ -107,9 +110,9 @@ class OptionFrame(QFrame):
         
         crossoverRate = OptionField(parameter='Crossover Rate')
         
-        crossoverProb = OptionField(parameter='Crossover Prob.')
-        
         population = OptionField(parameter='Init Population')
+        
+        select = OptionField(parameter='Select')
         
         mainLayout = QVBoxLayout()
         mainLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -118,8 +121,8 @@ class OptionFrame(QFrame):
         mainLayout.addWidget(mutationRate)
         mainLayout.addWidget(mutationProb)
         mainLayout.addWidget(crossoverRate)
-        mainLayout.addWidget(crossoverProb)
         mainLayout.addWidget(population)
+        mainLayout.addWidget(select)
         self.setLayout(mainLayout)
     
     def paintEvent(self, arg__1: QPaintEvent) -> None:
