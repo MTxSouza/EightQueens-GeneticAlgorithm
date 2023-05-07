@@ -1,7 +1,60 @@
 # imports
 from utils.widgets import *
+from typing import Union
 
 
+class Button(QToolButton):
+    
+    def __init__(self, *args, **kargs):
+        super(Button, self).__init__(*args, **kargs)
+        
+        # widget settings
+        self.setFixedSize(QSize(150, 30))
+        
+        # widget layout
+        self.shadow = QGraphicsDropShadowEffect(self)
+        self.shadow.setColor(QColor('#00a3cc'))
+        self.shadow.setOffset(0)
+        self.setGraphicsEffect(self.shadow)
+        
+        font = QFont()
+        font.setBold(True)
+        font.setFamily('Arial')
+        font.setPointSize(10)
+        self.setFont(font)
+    
+    def paintEvent(self, arg__1: QPaintEvent) -> None:
+        
+        with QPainter(self) as painter:
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            
+            pen = QPen()
+            if self.underMouse():
+                self.setCursor(Qt.CursorShape.PointingHandCursor)
+                pen.setWidth(2)
+                if self.isDown():
+                    painter.setBrush(QColor('#b9b6b6'))
+                    self.shadow.setBlurRadius(5)
+                else:
+                    painter.setBrush(QColor('#c2c2c2'))
+                    self.shadow.setBlurRadius(15)
+                pen.setColor(QColor('#05c1ff'))
+            else:
+                self.setCursor(Qt.CursorShape.ArrowCursor)
+                pen.setWidth(1)
+                pen.setColor(QColor('#474747'))
+                self.shadow.setBlurRadius(0)
+                painter.setBrush(QColor('#c2c2c2'))
+            painter.setPen(pen)
+            
+            rect = self.rect()
+            painter.drawRoundedRect(rect, 15, 15)
+            
+            pen.setColor(QColor('#474747'))
+            painter.setPen(pen)
+            
+            painter.drawText(rect, Qt.AlignmentFlag.AlignCenter, 'Run')
+            
 class Slider(QSlider):
     
     def __init__(self, min: int, max: int, isFloat: bool, *args, **kargs):
@@ -94,35 +147,58 @@ class OptionField(QFrame):
     
     def updateText(self) -> None:
         self.sliderText.setText(str(self.slider.getValue()))
+    
+    def value(self) -> Union[int, float]:
+        return self.slider.getValue()
 
 class OptionFrame(QFrame):
     
-    def __init__(self, *args, **kargs) -> None:
+    def __init__(self, model: object, *args, **kargs) -> None:
         super(OptionFrame, self).__init__(*args, **kargs)
         
         # widget settings
         self.setFixedWidth(250)
         
+        # model
+        self.model = model
+        
         # widget layout
-        mutationRate = OptionField(parameter='Mutation Rate')
+        self.mutationRate = OptionField(parameter='Mutation Rate')
+        self.mutationProb = OptionField(parameter='Mutation Prob.')
+        self.crossoverRate = OptionField(parameter='Crossover Rate')
+        self.population = OptionField(parameter='Init Population')
+        self.select = OptionField(parameter='Select')
         
-        mutationProb = OptionField(parameter='Mutation Prob.')
+        sliderLayout = QVBoxLayout()
+        sliderLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        sliderLayout.setContentsMargins(20,50,20,50)
+        sliderLayout.setSpacing(20)
+        sliderLayout.addWidget(self.mutationRate)
+        sliderLayout.addWidget(self.mutationProb)
+        sliderLayout.addWidget(self.crossoverRate)
+        sliderLayout.addWidget(self.population)
+        sliderLayout.addWidget(self.select)
         
-        crossoverRate = OptionField(parameter='Crossover Rate')
+        sliderFrame = QFrame()
+        sliderFrame.setStyleSheet('background: #c2c2c2')
+        sliderFrame.setLayout(sliderLayout)
         
-        population = OptionField(parameter='Init Population')
+        buttonRun = Button()
+        buttonRun.clicked.connect(self.run)
         
-        select = OptionField(parameter='Select')
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(buttonRun)
+        
+        buttonFrame = QFrame()
+        buttonFrame.setStyleSheet('background: #c2c2c2')
+        buttonFrame.setLayout(buttonLayout)
         
         mainLayout = QVBoxLayout()
         mainLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         mainLayout.setContentsMargins(20,50,20,50)
-        mainLayout.setSpacing(20)
-        mainLayout.addWidget(mutationRate)
-        mainLayout.addWidget(mutationProb)
-        mainLayout.addWidget(crossoverRate)
-        mainLayout.addWidget(population)
-        mainLayout.addWidget(select)
+        mainLayout.setSpacing(0)
+        mainLayout.addWidget(sliderFrame)
+        mainLayout.addWidget(buttonFrame)
         self.setLayout(mainLayout)
     
     def paintEvent(self, arg__1: QPaintEvent) -> None:
@@ -135,17 +211,21 @@ class OptionFrame(QFrame):
             
             rect = self.rect()
             painter.drawRoundedRect(rect, 30, 30)
+    
+    def run(self) -> None:
+        if self.model is not None:
+            ...
 
 class MainFrame(QFrame):
     
-    def __init__(self, *args, **kargs) -> None:
+    def __init__(self, model: object = None, *args, **kargs) -> None:
         super(MainFrame, self).__init__(*args, **kargs)
         
         # widget settings
         self.setStyleSheet('background: #d6d6d6')
         
         # widget layout
-        optionsFrame = OptionFrame()
+        optionsFrame = OptionFrame(model=model)
         
         gameFrame = QFrame()
         gameFrame.setStyleSheet('background: red')
