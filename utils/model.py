@@ -10,7 +10,6 @@ class EightQueensGA:
     def __init__(
         self,
         crossover_rate: float = 0.8,
-        crossover_p: float = 0.2,
         mutation_rate: float = 0.3, 
         mutation_p: float = 0.3, 
         init_population: int = 100, 
@@ -34,9 +33,6 @@ class EightQueensGA:
         # checking parameters
         assert isinstance(crossover_rate, (float)), 'crossover_rate must be a float'
         assert crossover_rate > 0 and crossover_rate <= 1, 'crossover_rate must be between 0 and 1'
-        
-        assert isinstance(crossover_p, (float)), 'crossover_p must be a float'
-        assert crossover_p > 0 and crossover_p <= 1, 'crossover_p must be between 0 and 1'
         
         assert isinstance(mutation_rate, (float)), 'mutation_rate must be a float'
         assert mutation_rate > 0 and mutation_rate <= 1, 'mutation_rate must be between 0 and 1'
