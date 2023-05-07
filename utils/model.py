@@ -84,7 +84,9 @@ class EightQueensGA:
         if selection is not None:
             assert isinstance(selection, (int)), 'selection must be an int'
             assert selection > 10 and selection < init_population, 'selection must be bigger than 10 and lower than init_population'
-
+        else:
+            selection = self.__sel
+        
         # parameters
         self.__crossRate = crossover_rate
         self.__mutRate = mutation_rate
