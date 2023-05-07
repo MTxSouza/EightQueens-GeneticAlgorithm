@@ -113,6 +113,8 @@ class OptionField(QFrame):
                 self.slider = Slider(min=50, max=200, isFloat=False)
             elif parameter == 'Select':
                 self.slider = Slider(min=10, max=20, isFloat=False)
+            elif parameter == 'Attempts':
+                self.slider = Slider(min=100, max=10000, isFloat=False)
         
         font = QFont()
         font.setBold(True)
@@ -168,6 +170,7 @@ class OptionFrame(QFrame):
         self.crossoverRate = OptionField(parameter='Crossover Rate')
         self.population = OptionField(parameter='Init Population')
         self.select = OptionField(parameter='Select')
+        self.attempts = OptionField(parameter='Attempts')
         
         sliderLayout = QVBoxLayout()
         sliderLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -178,6 +181,7 @@ class OptionFrame(QFrame):
         sliderLayout.addWidget(self.crossoverRate)
         sliderLayout.addWidget(self.population)
         sliderLayout.addWidget(self.select)
+        sliderLayout.addWidget(self.attempts)
         
         sliderFrame = QFrame()
         sliderFrame.setStyleSheet('background: #c2c2c2')
@@ -214,7 +218,18 @@ class OptionFrame(QFrame):
     
     def run(self) -> None:
         if self.model is not None:
-            ...
+            try:
+                self.model.config(
+                    crossover_rate = self.crossoverRate.value(),
+                    mutation_rate = self.mutationRate.value(), 
+                    mutation_p = self.mutationProb.value(), 
+                    init_population = self.population.value(), 
+                    selection = self.select.value()
+                )
+            except Exception as error:
+                ...
+            else:
+                pop, gen, check = self.model.run(attempts=self.attempts.value())
 
 class MainFrame(QFrame):
     
