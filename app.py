@@ -1,4 +1,6 @@
 # imports
+from utils.model import EightQueensGA
+
 from utils.widgets.title_bar import TitleBar
 from utils.widgets.frame import MainFrame
 from utils.widgets import *
@@ -16,7 +18,7 @@ class EightQueensGame(QMainWindow):
         # window layout
         titleBar = TitleBar(parent=self)
         
-        mainFrame = MainFrame()
+        mainFrame = MainFrame(model=EightQueensGA())
         
         mainLayout = QVBoxLayout()
         mainLayout.setContentsMargins(2,2,2,2)
