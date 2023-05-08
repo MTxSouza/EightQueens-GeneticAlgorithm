@@ -1,7 +1,11 @@
 # imports
+from typing import Union, Tuple
 from itertools import product
+
+import PySide6.QtCore
 from utils.widgets import *
-from typing import Union
+
+import numpy as np
 
 
 class Button(QToolButton):
@@ -159,6 +163,9 @@ class OptionFrame(QFrame):
     def __init__(self, model: object, *args, **kargs) -> None:
         super(OptionFrame, self).__init__(*args, **kargs)
         
+        # main parameters
+        self.root = kargs['parent']
+        
         # widget settings
         self.setFixedWidth(250)
         
@@ -228,9 +235,20 @@ class OptionFrame(QFrame):
                     selection = self.select.value()
                 )
             except Exception as error:
-                ...
+                self.root.resultLabel.setText('ERROR!')
             else:
-                pop, gen, check = self.model.run(attempts=self.attempts.value())
+                result, gen, check = self.model.run(attempts=self.attempts.value())
+                if check:
+                    self.root.resultLabel.setText(f'SOLUTION FOUND! Number of generations: {gen}')
+                    _, rows, cols = np.nonzero(a=result)
+                    self.root.boardFrame.buildBoard(rows=rows, cols=cols)
+                else:
+                    self.root.resultLabel.setText('NOT FOUND!')
+        else:
+            self.root.resultLabel.setText('NO MODEL!')
+    
+    def getResult(self) -> Union[Tuple[np.ndarray, int, bool], None]:
+        return self.result
 
 class Board(QFrame):
     
@@ -242,16 +260,29 @@ class Board(QFrame):
         self.setFixedSize(QSize(550,550))
         
         # widget layout
-        mainLayout = QGridLayout()
-        mainLayout.setContentsMargins(5,5,5,5)
-        mainLayout.setSpacing(0)
+        self.mainLayout = QGridLayout()
+        self.mainLayout.setContentsMargins(5,5,5,5)
+        self.mainLayout.setSpacing(0)
+
+        # build chess board
+        self.buildBoard()
+
+        self.setLayout(self.mainLayout)
+    
+    def buildBoard(self, rows: np.ndarray = None, cols: np.ndarray = None) -> None:
+        
+        if rows is not None and cols is not None:
+            coords = np.concatenate([rows.reshape((-1,1)), cols.reshape((-1,1))], axis=1)
+        else:
+            coords = None
         
         for (row, col) in product(range(8), range(8)):
             field = QLabel()
-            field.setStyleSheet(f'background: {"white" if (row + col) % 2 == 0 else "black"}')
-            mainLayout.addWidget(field, row, col)
-        
-        self.setLayout(mainLayout)
+            if coords is not None and np.any(np.all(coords == [row, col], axis=1)):
+                field.setStyleSheet(f'background: #00a3cc')
+            else:
+                field.setStyleSheet(f'background: {"white" if (row + col) % 2 == 0 else "black"}')
+            self.mainLayout.addWidget(field, row, col)
         
 class GameFrame(QFrame):
     
@@ -263,14 +294,20 @@ class GameFrame(QFrame):
         mainLayout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
         mainLayout.setContentsMargins(20,5,20,5)
         
-        resultLabel = QLabel()
-        resultLabel.setStyleSheet('background: #00a3cc')
-        resultLabel.setFixedHeight(30)
+        font = QFont()
+        font.setBold(True)
+        font.setFamily('Arial')
+        font.setPointSize(12)
         
-        boardFrame = Board()
+        self.resultLabel = QLabel()
+        self.resultLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.resultLabel.setFont(font)
+        self.resultLabel.setFixedHeight(30)
         
-        mainLayout.addWidget(resultLabel)
-        mainLayout.addWidget(boardFrame)
+        self.boardFrame = Board()
+        
+        mainLayout.addWidget(self.resultLabel)
+        mainLayout.addWidget(self.boardFrame)
         self.setLayout(mainLayout)
 
 class MainFrame(QFrame):
@@ -282,9 +319,8 @@ class MainFrame(QFrame):
         self.setStyleSheet('background: #d6d6d6')
         
         # widget layout
-        optionsFrame = OptionFrame(model=model)
-        
         gameFrame = GameFrame()
+        optionsFrame = OptionFrame(model=model, parent=gameFrame)
         
         mainLayout = QHBoxLayout()
         mainLayout.setContentsMargins(30,50,30,50)
