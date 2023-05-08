@@ -1,4 +1,5 @@
 # imports
+from itertools import product
 from utils.widgets import *
 from typing import Union
 
@@ -231,6 +232,47 @@ class OptionFrame(QFrame):
             else:
                 pop, gen, check = self.model.run(attempts=self.attempts.value())
 
+class Board(QFrame):
+    
+    def __init__(self, *args, **kargs) -> None:
+        super(Board, self).__init__(*args, **kargs)
+        
+        # widget settings
+        self.setStyleSheet('background: #00a3cc')
+        self.setFixedSize(QSize(550,550))
+        
+        # widget layout
+        mainLayout = QGridLayout()
+        mainLayout.setContentsMargins(5,5,5,5)
+        mainLayout.setSpacing(0)
+        
+        for (row, col) in product(range(8), range(8)):
+            field = QLabel()
+            field.setStyleSheet(f'background: {"white" if (row + col) % 2 == 0 else "black"}')
+            mainLayout.addWidget(field, row, col)
+        
+        self.setLayout(mainLayout)
+        
+class GameFrame(QFrame):
+    
+    def __init__(self, *args, **kargs) -> None:
+        super(GameFrame, self).__init__(*args, **kargs)
+        
+        # widget layout
+        mainLayout = QVBoxLayout()
+        mainLayout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        mainLayout.setContentsMargins(20,5,20,5)
+        
+        resultLabel = QLabel()
+        resultLabel.setStyleSheet('background: #00a3cc')
+        resultLabel.setFixedHeight(30)
+        
+        boardFrame = Board()
+        
+        mainLayout.addWidget(resultLabel)
+        mainLayout.addWidget(boardFrame)
+        self.setLayout(mainLayout)
+
 class MainFrame(QFrame):
     
     def __init__(self, model: object = None, *args, **kargs) -> None:
@@ -242,8 +284,7 @@ class MainFrame(QFrame):
         # widget layout
         optionsFrame = OptionFrame(model=model)
         
-        gameFrame = QFrame()
-        gameFrame.setStyleSheet('background: red')
+        gameFrame = GameFrame()
         
         mainLayout = QHBoxLayout()
         mainLayout.setContentsMargins(30,50,30,50)
