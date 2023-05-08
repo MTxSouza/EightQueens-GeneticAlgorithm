@@ -279,10 +279,12 @@ class Board(QFrame):
         
         for (row, col) in product(range(8), range(8)):
             field = QLabel()
+            field.setAlignment(Qt.AlignmentFlag.AlignCenter)
             if coords is not None and np.any(np.all(coords == [row, col], axis=1)):
-                field.setStyleSheet(f'background: #00a3cc')
-            else:
-                field.setStyleSheet(f'background: {"white" if (row + col) % 2 == 0 else "black"}')
+                queen = QPixmap('assets/queenIcon.png')
+                queen = queen.scaled(QSize(50,50))
+                field.setPixmap(queen)
+            field.setStyleSheet(f'background: {"white" if (row + col) % 2 == 0 else "black"}')
             self.mainLayout.addWidget(field, row, col)
         
 class GameFrame(QFrame):
