@@ -239,10 +239,11 @@ class OptionFrame(QFrame):
             else:
                 result, gen, check = self.model.run(attempts=self.attempts.value())
                 if check:
-                    self.root.resultLabel.setText(f'SOLUTION FOUND! Number of generations: {gen}')
+                    self.root.resultLabel.setText(f'A SOLUTION HAS BEEN FOUND! Number of generations: {gen}')
                     _, rows, cols = np.nonzero(a=result)
                     self.root.boardFrame.buildBoard(rows=rows, cols=cols)
                 else:
+                    self.root.boardFrame.buildBoard()
                     self.root.resultLabel.setText('NOT FOUND!')
         else:
             self.root.resultLabel.setText('NO MODEL!')
