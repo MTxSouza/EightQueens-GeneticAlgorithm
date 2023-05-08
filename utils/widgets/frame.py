@@ -176,7 +176,7 @@ class OptionFrame(QFrame):
         sliderLayout = QVBoxLayout()
         sliderLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
         sliderLayout.setContentsMargins(20,50,20,50)
-        sliderLayout.setSpacing(20)
+        sliderLayout.setSpacing(5)
         sliderLayout.addWidget(self.mutationRate)
         sliderLayout.addWidget(self.mutationProb)
         sliderLayout.addWidget(self.crossoverRate)
